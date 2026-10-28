@@ -235,7 +235,7 @@ The `run.sh` script will automatically:
            max_total_tokens: 120000
            max_completion_tokens: 16384
      ```
-     OmniRoute and OpenRouter can also be configured as `openai_compatible` channels. Use `http://localhost:20128/v1` (adjust for your OmniRoute deployment) or `https://openrouter.ai/api/v1` as the Base URL, then enter the service API key and model ID.
+     Select **OmniRoute** or **OpenRouter** as the provider in the channel editor. It fills in the service Base URL; enter your API key and model ID. For YAML, use `provider: omniroute` with `http://localhost:20128/v1`, or `provider: openrouter` with `https://openrouter.ai/api/v1`.
    - Or edit `config.yaml` directly before launching. `ai.default_channel` is used for new conversations and tasks that do not explicitly select a channel; the chat page can also select any saved channel per session.
 2. **Login** - On first startup the console prints an auto-generated initial `admin` password; create accounts from **Platform permissions → User management**
 3. **Install security tools (optional)** - Install tools from `tools/` as needed; missing tools are skipped or substituted at runtime. Common examples:

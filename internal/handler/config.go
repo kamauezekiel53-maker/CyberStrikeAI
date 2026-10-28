@@ -1298,7 +1298,7 @@ func (h *ConfigHandler) TestOpenAI(c *gin.Context) {
 		if strings.EqualFold(strings.TrimSpace(req.Provider), "claude") {
 			baseURL = "https://api.anthropic.com"
 		} else {
-			baseURL = "https://api.openai.com/v1"
+			baseURL = config.DefaultAIProviderBaseURL(req.Provider)
 		}
 	}
 
@@ -1505,7 +1505,7 @@ func (h *ConfigHandler) ListModels(c *gin.Context) {
 
 	baseURL := strings.TrimSuffix(strings.TrimSpace(req.BaseURL), "/")
 	if baseURL == "" {
-		baseURL = "https://api.openai.com/v1"
+		baseURL = config.DefaultAIProviderBaseURL(provider)
 	}
 
 	tmpCfg := &config.OpenAIConfig{

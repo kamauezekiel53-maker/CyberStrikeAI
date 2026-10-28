@@ -841,7 +841,7 @@ type MCPConfig struct {
 }
 
 type OpenAIConfig struct {
-	Provider            string `yaml:"provider,omitempty" json:"provider,omitempty"` // API 提供商: "openai"(默认) 或 "claude"，claude 使用 Eino 原生 Anthropic Messages API
+	Provider            string `yaml:"provider,omitempty" json:"provider,omitempty"` // 运行时提供商: "openai"(默认) 或 "claude"；兼容网关在 AIChannelConfig 中映射为 openai
 	APIKey              string `yaml:"api_key" json:"api_key"`
 	BaseURL             string `yaml:"base_url" json:"base_url"`
 	Model               string `yaml:"model" json:"model"`
@@ -860,7 +860,7 @@ type AIConfig struct {
 
 type AIChannelConfig struct {
 	Name                string                `yaml:"name,omitempty" json:"name,omitempty"`
-	Provider            string                `yaml:"provider,omitempty" json:"provider,omitempty"`
+	Provider            string                `yaml:"provider,omitempty" json:"provider,omitempty"` // openai_compatible | openrouter | omniroute | claude
 	APIKey              string                `yaml:"api_key" json:"api_key"`
 	BaseURL             string                `yaml:"base_url" json:"base_url"`
 	Model               string                `yaml:"model" json:"model"`
@@ -869,15 +869,42 @@ type AIChannelConfig struct {
 	Reasoning           OpenAIReasoningConfig `yaml:"reasoning,omitempty" json:"reasoning,omitempty"`
 }
 
+const (
+	AIChannelProviderOpenAICompatible = "openai_compatible"
+	AIChannelProviderOpenRouter      = "openrouter"
+	AIChannelProviderOmniRoute       = "omniroute"
+	OpenRouterDefaultBaseURL         = "https://openrouter.ai/api/v1"
+	OmniRouteDefaultBaseURL          = "http://localhost:20128/v1"
+)
+
+// DefaultAIProviderBaseURL returns the default endpoint for a selectable AI provider.
+// Unknown providers keep the standard OpenAI-compatible endpoint as a safe fallback.
+func DefaultAIProviderBaseURL(provider string) string {
+	switch strings.ToLower(strings.TrimSpace(provider)) {
+	case AIChannelProviderOpenRouter:
+		return OpenRouterDefaultBaseURL
+	case AIChannelProviderOmniRoute:
+		return OmniRouteDefaultBaseURL
+	default:
+		return "https://api.openai.com/v1"
+	}
+}
+
 func (c AIChannelConfig) ToOpenAIConfig() OpenAIConfig {
-	provider := strings.TrimSpace(c.Provider)
-	if provider == "" || provider == "openai_compatible" {
+	channelProvider := strings.ToLower(strings.TrimSpace(c.Provider))
+	provider := channelProvider
+	baseURL := strings.TrimSpace(c.BaseURL)
+	switch channelProvider {
+	case "", "openai", AIChannelProviderOpenAICompatible, AIChannelProviderOpenRouter, AIChannelProviderOmniRoute:
 		provider = "openai"
+	}
+	if baseURL == "" && (channelProvider == AIChannelProviderOpenRouter || channelProvider == AIChannelProviderOmniRoute) {
+		baseURL = DefaultAIProviderBaseURL(channelProvider)
 	}
 	return OpenAIConfig{
 		Provider:            provider,
 		APIKey:              c.APIKey,
-		BaseURL:             c.BaseURL,
+		BaseURL:             baseURL,
 		Model:               c.Model,
 		MaxTotalTokens:      c.MaxTotalTokens,
 		MaxCompletionTokens: c.MaxCompletionTokens,

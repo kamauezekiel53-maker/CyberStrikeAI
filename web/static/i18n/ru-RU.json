@@ -3081,6 +3081,8 @@
     "aiChannelProbeDone": "Проверка завершена: готово {ok}/{total}",
     "apiProvider": "Провайдер API",
     "providerOpenAI": "OpenAI / API, совместимый с OpenAI",
+    "providerOpenRouter": "OpenRouter",
+    "providerOmniRoute": "OmniRoute",
     "providerClaude": "Claude (Anthropic Messages API)",
     "visionProviderReuseOpenAI": "Использовать канал ИИ по умолчанию",
     "fofaConfig": "Настройки FOFA",

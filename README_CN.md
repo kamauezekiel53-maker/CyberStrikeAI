@@ -234,7 +234,7 @@ chmod +x run.sh && ./run.sh
            max_total_tokens: 120000
            max_completion_tokens: 16384
      ```
-   - 或启动前直接编辑 `config.yaml` 文件。`ai.default_channel` 会作为新对话和未显式选择通道任务的默认模型；对话页也可以在会话设置里选择某个已保存通道。
+   - 也可在服务商下拉框中选择 **OmniRoute** 或 **OpenRouter**，界面会自动填写对应 Base URL；只需再填 API Key 和模型 ID。YAML 中分别使用 `provider: omniroute` 或 `provider: openrouter`。或启动前直接编辑 `config.yaml` 文件。`ai.default_channel` 会作为新对话和未显式选择通道任务的默认模型；对话页也可以在会话设置里选择某个已保存通道。
 2. **登录系统** - 首次启动时控制台会显示自动生成的 `admin` 初始密码；也可在「平台权限 → 用户管理」中创建账号
 3. **安装安全工具（可选）** - 按需安装 `tools/` 目录中的工具；未安装的工具在执行时会自动跳过或改用替代方案。常用示例：
 

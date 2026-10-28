@@ -3056,6 +3056,8 @@
     "aiChannelProbeDone": "探活完成：{ok}/{total} 可用",
     "apiProvider": "API 提供商",
     "providerOpenAI": "OpenAI / 兼容 OpenAI 协议",
+    "providerOpenRouter": "OpenRouter",
+    "providerOmniRoute": "OmniRoute",
     "providerClaude": "Claude (Anthropic Messages API)",
     "visionProviderReuseOpenAI": "默认 AI 通道（留空复用）",
     "fofaConfig": "FOFA 配置",

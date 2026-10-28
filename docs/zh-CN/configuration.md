@@ -69,8 +69,8 @@ ai:
 | `ai.default_channel` | 默认通道 ID。新对话、机器人、批量任务和未显式选择通道的请求使用它。 |
 | `ai.channels.<id>` | 通道配置。ID 会归一化为小写、数字和短横线，例如 `Qwen_Max` 会变成 `qwen-max`。 |
 | `name` | Web UI 展示名。留空时使用通道 ID。 |
-| `provider` | `openai_compatible` 或 `claude`。`openai_compatible` 会在运行时映射为 `openai`；`claude` 使用 Eino 原生 Anthropic Messages API。 |
-| `base_url/api_key/model` | 必填。Base URL 通常需要包含版本路径，如 OpenAI/兼容网关的 `/v1`。 |
+| `provider` | `openai_compatible`、`openrouter`、`omniroute` 或 `claude`。OpenRouter 和 OmniRoute 使用 OpenAI 兼容 Chat Completions 协议；Claude 使用 Eino 原生 Anthropic Messages API。 |
+| `base_url/api_key/model` | API Key 和模型必填。省略 OpenRouter 或 OmniRoute 的 Base URL 时会自动填入服务地址；自定义兼容端点需明确填写 Base URL。 |
 | `max_total_tokens` | 上下文压缩、攻击链构建、多代理摘要等共用的总预算。 |
 | `max_completion_tokens` | 单次模型输出上限；未填时使用默认值。 |
 | `reasoning` | 该通道的默认推理扩展字段。不同网关支持差异较大，异常时先尝试 `mode: off`。 |
@@ -91,7 +91,7 @@ GPT-5.6 和 GPT-6 Sol/Luna 在 Chat Completions 中使用函数工具时，应�
 
 ### OmniRoute 和 OpenRouter
 
-这两个服务都可作为 `openai_compatible` AI 通道使用。分别填写服务的 API Key 和模型 ID，Base URL 需包含 `/v1`：
+在 AI 通道的服务商下拉框中选择 **OmniRoute** 或 **OpenRouter**。两者都使用 OpenAI 兼容 Chat Completions API。填写服务的 API Key 和模型 ID；界面会自动填写 Base URL，YAML 中也可以省略：
 
 ```yaml
 ai:
@@ -99,13 +99,13 @@ ai:
   channels:
     omniroute:
       name: OmniRoute
-      provider: openai_compatible
+      provider: omniroute
       base_url: http://localhost:20128/v1 # 按 OmniRoute 部署地址调整
       api_key: your-omniroute-api-key
       model: your-omniroute-model-id
     openrouter:
       name: OpenRouter
-      provider: openai_compatible
+      provider: openrouter
       base_url: https://openrouter.ai/api/v1
       api_key: sk-or-v1-...
       model: openai/gpt-4.1 # 使用 OpenRouter 模型 ID

@@ -98,7 +98,7 @@ storage:
 #   - OpenRouter: https://openrouter.ai/api/v1
 #   - 其他兼容 OpenAI 协议的 API
 # 常用模型: gpt-4, gpt-3.5-turbo, deepseek-chat, claude-3-opus 等
-# provider: 可选值 openai_compatible(默认) | claude(Eino 原生 Anthropic Messages API)
+# provider: openai_compatible(默认) | openrouter | omniroute | claude(Eino 原生 Anthropic Messages API)
 ai:
   default_channel: qwen-max
   channels:
@@ -128,14 +128,14 @@ ai:
     # OmniRoute 示例：API Key 在 OmniRoute 实例中创建，模型名取决于该实例的路由配置。
     # omniroute:
     #   name: OmniRoute
-    #   provider: openai_compatible
+    #   provider: omniroute
     #   base_url: http://localhost:20128/v1
     #   api_key: your-omniroute-api-key
     #   model: your-omniroute-model-id
     # OpenRouter 示例：使用 OpenRouter 模型 ID。
     # openrouter:
     #   name: OpenRouter
-    #   provider: openai_compatible
+    #   provider: openrouter
     #   base_url: https://openrouter.ai/api/v1
     #   api_key: sk-or-v1-...
     #   model: openai/gpt-4.1
@@ -145,7 +145,7 @@ vision:
   model: qwen-vl # VL 模型名（enabled 时必填）
   api_key: "" # 留空则复用默认 AI 通道 api_key
   base_url: "" # 留空则复用默认 AI 通道 base_url
-  provider: # 留空则复用默认 AI 通道 provider（openai_compatible | claude）
+  provider: # 留空则复用默认 AI 通道 provider（openai_compatible | openrouter | omniroute | claude）
   max_image_bytes: 5242880 # 原始文件上限（字节），默认 5MB
   max_dimension: 2048 # 长边缩放像素
   jpeg_quality: 82

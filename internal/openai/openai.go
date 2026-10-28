@@ -98,7 +98,7 @@ func (c *Client) ChatCompletion(ctx context.Context, payload interface{}, out in
 
 	baseURL := strings.TrimSuffix(c.config.BaseURL, "/")
 	if baseURL == "" {
-		baseURL = "https://api.openai.com/v1"
+		baseURL = config.DefaultAIProviderBaseURL(c.config.Provider)
 	}
 
 	body, err := json.Marshal(payload)
@@ -193,7 +193,7 @@ func (c *Client) ChatCompletionStream(ctx context.Context, payload interface{}, 
 
 	baseURL := strings.TrimSuffix(c.config.BaseURL, "/")
 	if baseURL == "" {
-		baseURL = "https://api.openai.com/v1"
+		baseURL = config.DefaultAIProviderBaseURL(c.config.Provider)
 	}
 
 	body, err := json.Marshal(payload)
@@ -343,7 +343,7 @@ func (c *Client) ChatCompletionStreamWithToolCalls(
 
 	baseURL := strings.TrimSuffix(c.config.BaseURL, "/")
 	if baseURL == "" {
-		baseURL = "https://api.openai.com/v1"
+		baseURL = config.DefaultAIProviderBaseURL(c.config.Provider)
 	}
 
 	body, err := json.Marshal(payload)

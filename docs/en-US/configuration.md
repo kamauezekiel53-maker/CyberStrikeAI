@@ -68,8 +68,8 @@ ai:
 | `ai.default_channel` | Default channel ID for new conversations and requests without an explicit channel. |
 | `ai.channels.<id>` | Channel config. IDs are normalized to lowercase letters, digits, and hyphens. |
 | `name` | Display name in the Web UI; falls back to the ID. |
-| `provider` | `openai_compatible` or `claude`. OpenAI-compatible channels map to runtime `openai`; Claude channels use Eino's native Anthropic Messages API component. |
-| `base_url/api_key/model` | Required. Base URL usually includes a version path such as `/v1`. |
+| `provider` | `openai_compatible`, `openrouter`, `omniroute`, or `claude`. OpenRouter and OmniRoute use the OpenAI-compatible Chat Completions protocol; Claude uses Eino's native Anthropic Messages API component. |
+| `base_url/api_key/model` | API key and model are required. OpenRouter and OmniRoute get their service Base URL automatically when omitted; custom OpenAI-compatible endpoints need an explicit Base URL. |
 | `max_total_tokens` | Shared context budget for compression, attack-chain generation, multi-agent summaries, and similar paths. |
 | `max_completion_tokens` | Per-response output cap; default is used when empty. |
 | `reasoning` | Default reasoning fields for the channel. Gateway support varies; try `mode: off` first when a provider rejects requests. |
@@ -78,7 +78,7 @@ The chat page reads saved channels into the “AI Channel” selector. A non-emp
 
 ### OmniRoute and OpenRouter
 
-Both services work as `openai_compatible` AI channels. Configure each service's API key and model ID in its own channel; the Base URL must include `/v1`:
+Choose **OmniRoute** or **OpenRouter** in the AI channel provider selector. Each uses the OpenAI-compatible Chat Completions API. Configure the service API key and model ID; the Base URL is prefilled in the UI and can also be omitted from YAML:
 
 ```yaml
 ai:
@@ -86,13 +86,13 @@ ai:
   channels:
     omniroute:
       name: OmniRoute
-      provider: openai_compatible
+      provider: omniroute
       base_url: http://localhost:20128/v1 # adjust for your OmniRoute deployment
       api_key: your-omniroute-api-key
       model: your-omniroute-model-id
     openrouter:
       name: OpenRouter
-      provider: openai_compatible
+      provider: openrouter
       base_url: https://openrouter.ai/api/v1
       api_key: sk-or-v1-...
       model: openai/gpt-4.1 # use an OpenRouter model ID

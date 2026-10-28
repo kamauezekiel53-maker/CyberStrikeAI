@@ -3068,6 +3068,8 @@
     "aiChannelProbeDone": "Probe complete: {ok}/{total} ready",
     "apiProvider": "API Provider",
     "providerOpenAI": "OpenAI / OpenAI-compatible API",
+    "providerOpenRouter": "OpenRouter",
+    "providerOmniRoute": "OmniRoute",
     "providerClaude": "Claude (Anthropic Messages API)",
     "visionProviderReuseOpenAI": "Reuse default AI channel",
     "fofaConfig": "FOFA config",

@@ -2688,6 +2688,49 @@ function readAIChannelFromMainForm(id) {
     });
 }
 
+function aiChannelProviderPreset(provider) {
+    const key = String(provider || '').trim().toLowerCase();
+    if (key === 'openrouter') {
+        return { baseUrl: 'https://openrouter.ai/api/v1', modelPlaceholder: 'openai/gpt-4.1' };
+    }
+    if (key === 'omniroute') {
+        return { baseUrl: 'http://localhost:20128/v1', modelPlaceholder: 'provider/model' };
+    }
+    if (key === 'claude') {
+        return { baseUrl: 'https://api.anthropic.com/v1', modelPlaceholder: 'claude-sonnet-4-5' };
+    }
+    return { baseUrl: 'https://api.openai.com/v1', modelPlaceholder: 'gpt-4.1' };
+}
+
+function aiChannelProviderLabel(provider) {
+    const key = String(provider || '').trim().toLowerCase();
+    if (key === 'openrouter') return settingsT('settingsBasic.providerOpenRouter', 'OpenRouter');
+    if (key === 'omniroute') return settingsT('settingsBasic.providerOmniRoute', 'OmniRoute');
+    if (key === 'claude') return settingsT('settingsBasic.providerClaude', 'Claude');
+    return settingsT('settingsBasic.aiChannelOpenAICompat', 'OpenAI compatible');
+}
+
+function applyAIChannelProviderPreset(provider, previousProvider, applyBaseURL = true) {
+    const baseEl = document.getElementById('openai-base-url');
+    const modelEl = document.getElementById('openai-model');
+    const nextPreset = aiChannelProviderPreset(provider);
+    const previousPreset = aiChannelProviderPreset(previousProvider);
+    if (baseEl) {
+        const currentBaseURL = String(baseEl.value || '').trim();
+        const knownDefaultBaseURLs = [
+            'https://api.openai.com/v1',
+            'https://openrouter.ai/api/v1',
+            'http://localhost:20128/v1',
+            'https://api.anthropic.com/v1'
+        ];
+        if (applyBaseURL && (!currentBaseURL || currentBaseURL === previousPreset.baseUrl || knownDefaultBaseURLs.includes(currentBaseURL))) {
+            baseEl.value = nextPreset.baseUrl;
+        }
+        baseEl.placeholder = nextPreset.baseUrl;
+    }
+    if (modelEl) modelEl.placeholder = nextPreset.modelPlaceholder;
+}
+
 function writeAIChannelToMainForm(id) {
     const ai = ensureAIConfigShape(currentConfig || {});
     const ch = ai.channels[id] || ai.channels[ai.default_channel] || {};
@@ -2699,11 +2742,12 @@ function writeAIChannelToMainForm(id) {
         const provider = (ch.provider === 'openai' || !ch.provider) ? 'openai_compatible' : ch.provider;
         providerEl.value = provider;
         syncSettingsCustomSelect(providerEl);
+        applyAIChannelProviderPreset(provider, provider, false);
     }
     const keyEl = document.getElementById('openai-api-key');
     if (keyEl) keyEl.value = ch.api_key || '';
     const baseEl = document.getElementById('openai-base-url');
-    if (baseEl) baseEl.value = ch.base_url || '';
+    if (baseEl) baseEl.value = ch.base_url || aiChannelProviderPreset(providerEl?.value).baseUrl;
     const modelEl = document.getElementById('openai-model');
     if (modelEl) modelEl.value = ch.model || '';
     const maxTokensEl = document.getElementById('openai-max-total-tokens');
@@ -2821,7 +2865,15 @@ function bindAIChannelEditorPreviewSync() {
         if (!el || el.dataset.aiChannelPreviewBound === '1') return;
         el.dataset.aiChannelPreviewBound = '1';
         const eventName = el.tagName === 'SELECT' ? 'change' : 'input';
-        el.addEventListener(eventName, syncAIChannelEditorPreview);
+        if (fieldId === 'openai-provider') {
+            el.addEventListener(eventName, function () {
+                const previousProvider = currentConfig?.ai?.channels?.[selectedAIChannelId]?.provider || 'openai_compatible';
+                applyAIChannelProviderPreset(el.value, previousProvider);
+                syncAIChannelEditorPreview();
+            });
+        } else {
+            el.addEventListener(eventName, syncAIChannelEditorPreview);
+        }
     });
 }
 
@@ -2956,7 +3008,7 @@ function updateAIChannelEditorChrome(id) {
         title.textContent = settingsT('settingsBasic.aiChannelFormContextHint', '表单保存后会更新该通道配置。');
     }
     if (meta) {
-        const provider = ch.provider === 'claude' ? 'Claude' : settingsT('settingsBasic.aiChannelOpenAICompat', 'OpenAI 兼容');
+        const provider = aiChannelProviderLabel(ch.provider);
         const statusText = probe?.message || (isComplete
             ? settingsT('settingsBasic.aiChannelComplete', '配置完整')
             : settingsT('settingsBasic.aiChannelDraft', '待完善'));
