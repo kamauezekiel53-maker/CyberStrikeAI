@@ -94,6 +94,8 @@ storage:
 # 支持的 API 服务商：
 #   - OpenAI: https://api.openai.com/v1
 #   - DeepSeek: https://api.deepseek.com/v1
+#   - OmniRoute: http://localhost:20128/v1（本地默认地址；按实际部署调整）
+#   - OpenRouter: https://openrouter.ai/api/v1
 #   - 其他兼容 OpenAI 协议的 API
 # 常用模型: gpt-4, gpt-3.5-turbo, deepseek-chat, claude-3-opus 等
 # provider: 可选值 openai_compatible(默认) | claude(Eino 原生 Anthropic Messages API)
@@ -123,6 +125,20 @@ ai:
     #   model: qwen-plus
     #   max_total_tokens: 120000
     #   max_completion_tokens: 32768
+    # OmniRoute 示例：API Key 在 OmniRoute 实例中创建，模型名取决于该实例的路由配置。
+    # omniroute:
+    #   name: OmniRoute
+    #   provider: openai_compatible
+    #   base_url: http://localhost:20128/v1
+    #   api_key: your-omniroute-api-key
+    #   model: your-omniroute-model-id
+    # OpenRouter 示例：使用 OpenRouter 模型 ID。
+    # openrouter:
+    #   name: OpenRouter
+    #   provider: openai_compatible
+    #   base_url: https://openrouter.ai/api/v1
+    #   api_key: sk-or-v1-...
+    #   model: openai/gpt-4.1
 # 视觉分析（analyze_image MCP 工具；图片仅在单次 VL 调用中出现，Agent 上下文只保留文字摘要）
 vision:
   enabled: false # true 且 model 非空时注册 analyze_image

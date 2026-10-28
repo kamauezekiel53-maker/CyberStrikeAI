@@ -89,6 +89,30 @@ GPT-5.6 和 GPT-6 Sol/Luna 在 Chat Completions 中使用函数工具时，应�
 
 对话页的“AI 通道”下拉框会读取已保存通道。请求体中的 `aiChannelId` 非空时仅对本次/本会话运行配置生效，不会把 API Key 发送给模型；为空时跟随 `ai.default_channel`。
 
+### OmniRoute 和 OpenRouter
+
+这两个服务都可作为 `openai_compatible` AI 通道使用。分别填写服务的 API Key 和模型 ID，Base URL 需包含 `/v1`：
+
+```yaml
+ai:
+  default_channel: openrouter
+  channels:
+    omniroute:
+      name: OmniRoute
+      provider: openai_compatible
+      base_url: http://localhost:20128/v1 # 按 OmniRoute 部署地址调整
+      api_key: your-omniroute-api-key
+      model: your-omniroute-model-id
+    openrouter:
+      name: OpenRouter
+      provider: openai_compatible
+      base_url: https://openrouter.ai/api/v1
+      api_key: sk-or-v1-...
+      model: openai/gpt-4.1 # 使用 OpenRouter 模型 ID
+```
+
+在 **系统设置 → 基本设置 → AI 通道配置** 中新增通道时填写相同的值。OmniRoute 模型 ID 取决于其路由配置。OpenRouter 的 `HTTP-Referer` 和 `X-OpenRouter-Title` 归属标识请求头为可选项，不影响基本 API 调用。
+
 常用操作：
 
 - 新增：点击左侧 `+`，填写必填字段后保存。

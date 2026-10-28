@@ -76,6 +76,30 @@ ai:
 
 The chat page reads saved channels into the “AI Channel” selector. A non-empty request `aiChannelId` selects a channel for that run/session without sending API credentials through the prompt path. Empty `aiChannelId` follows `ai.default_channel`.
 
+### OmniRoute and OpenRouter
+
+Both services work as `openai_compatible` AI channels. Configure each service's API key and model ID in its own channel; the Base URL must include `/v1`:
+
+```yaml
+ai:
+  default_channel: openrouter
+  channels:
+    omniroute:
+      name: OmniRoute
+      provider: openai_compatible
+      base_url: http://localhost:20128/v1 # adjust for your OmniRoute deployment
+      api_key: your-omniroute-api-key
+      model: your-omniroute-model-id
+    openrouter:
+      name: OpenRouter
+      provider: openai_compatible
+      base_url: https://openrouter.ai/api/v1
+      api_key: sk-or-v1-...
+      model: openai/gpt-4.1 # use an OpenRouter model ID
+```
+
+Use the same values when adding channels in **System Settings → Basic Settings → AI Channel Configuration**. OmniRoute model IDs depend on its configured routes. OpenRouter's `HTTP-Referer` and `X-OpenRouter-Title` attribution headers are optional and are not required for API requests.
+
 ### Disabling reasoning by provider and model
 
 Use `reasoning.mode: off` (or **Reasoning → Off** in chat) to disable reasoning. The request format depends on the channel:
